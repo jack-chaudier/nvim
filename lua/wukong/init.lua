@@ -1,0 +1,9 @@
+vim.g.mapleader = " "
+local ok, err = pcall(function()
+    require("wukong.lazy_init")
+    require("wukong.remap")
+    require("wukong.set")
+end)
+if not ok then
+    vim.notify("Error loading config: " .. err, vim.log.levels.ERROR)
+end
