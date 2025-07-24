@@ -4,17 +4,21 @@ local M = {}
 -- Define the 6 colorschemes: 3 dark, 3 light
 M.colorschemes = {
   -- Dark themes
+  { name = "rose-pine-main", background = "dark" },
+  { name = "rose-pine-moon", background = "dark" },
+  { name = "github_dark", background = "dark" },
   { name = "tokyonight-storm", background = "dark" },
   { name = "catppuccin-mocha", background = "dark" },
-  { name = "onedark", background = "dark" },  -- Changed from "onedarkpro" to "onedark"
+  { name = "onedark", background = "dark" },
   -- Light themes
+  { name = "rose-pine-dawn", background = "light" },
+  { name = "github_light", background = "light" },
   { name = "tokyonight-day", background = "light" },
   { name = "catppuccin-latte", background = "light" },
-  { name = "github_light", background = "light" },
 }
 
 -- Get the data path for storing colorscheme preference
-local data_path = vim.fn.stdpath("data") .. "/colorscheme.txt"
+local data_path = vim.fn.stdpath("data") .. "/wukong_colorscheme.txt"
 
 -- Save colorscheme to file
 function M.save_colorscheme(colorscheme)
@@ -22,6 +26,8 @@ function M.save_colorscheme(colorscheme)
   if file then
     file:write(colorscheme)
     file:close()
+  else
+    vim.notify("Failed to save colorscheme preference", vim.log.levels.WARN)
   end
 end
 
@@ -31,9 +37,25 @@ function M.load_saved_colorscheme()
   if file then
     local colorscheme = file:read("*l")
     file:close()
-    return colorscheme
+    -- Validate that the loaded colorscheme exists in our list
+    for _, scheme in ipairs(M.colorschemes) do
+      if scheme.name == colorscheme then
+        return colorscheme
+      end
+    end
   end
   return nil
+end
+
+-- Apply transparency settings
+local function apply_transparency()
+  vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+  vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+  vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+  vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+  vim.api.nvim_set_hl(0, "MsgArea", { bg = "none" })
+  vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = "none" })
+  vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = "none" })
 end
 
 -- Set colorscheme with proper background
@@ -57,18 +79,22 @@ function M.set_colorscheme(colorscheme_name)
       vim.notify("Colorscheme: " .. colorscheme_name .. " (" .. scheme_info.background .. ")")
       -- Save the colorscheme
       M.save_colorscheme(colorscheme_name)
-      -- Force lualine refresh with proper theme
+      -- Apply transparency after colorscheme is loaded
       vim.defer_fn(function()
-        require('lualine').setup({
-          options = {
-            theme = 'auto',
-            refresh = {
-              statusline = 1000,
-              tabline = 1000,
-              winbar = 1000,
+        apply_transparency()
+        -- Force lualine refresh with proper theme
+        if pcall(require, 'lualine') then
+          require('lualine').setup({
+            options = {
+              theme = 'auto',
+              refresh = {
+                statusline = 1000,
+                tabline = 1000,
+                winbar = 1000,
+              }
             }
-          }
-        })
+          })
+        end
       end, 50)
     else
       vim.notify("Failed to load colorscheme: " .. colorscheme_name, vim.log.levels.ERROR)
@@ -130,10 +156,12 @@ function M.init()
   -- Try to load saved colorscheme
   local saved = M.load_saved_colorscheme()
   if saved then
+    vim.notify("Loading saved colorscheme: " .. saved)
     M.set_colorscheme(saved)
   else
-    -- Default to dark theme
-    M.set_colorscheme("tokyonight-storm")
+    -- Default to rose-pine-main theme
+    vim.notify("No saved colorscheme found, using default: rose-pine-main")
+    M.set_colorscheme("rose-pine-main")
   end
   
   -- Update current_index to match loaded colorscheme

@@ -6,7 +6,7 @@ local ok, err = pcall(function()
 
     vim.defer_fn(function ()
         require("wukong.colorscheme-utils").init()
-    end, 50)
+    end, 100)
 end)
 if not ok then
     vim.notify("Error loading config: " .. err, vim.log.levels.ERROR)
