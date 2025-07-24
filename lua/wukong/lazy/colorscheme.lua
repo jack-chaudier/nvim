@@ -1,6 +1,6 @@
 -- lua/wukong/lazy/colorscheme.lua
 return {
-  -- Tokyo Night
+  -- Tokyo Night (has both excellent dark and light variants)
   {
     "folke/tokyonight.nvim",
     lazy = false,
@@ -18,41 +18,37 @@ return {
       },
       lualine_bold = false,
     },
-    config = function(_, opts)
-      require("tokyonight").setup(opts)
-      -- Set default colorscheme after all plugins are loaded
-      vim.defer_fn(function()
-        require("wukong.colorscheme-utils").set_default_colorscheme()
-      end, 0)
-    end,
   },
   
-  -- Catppuccin
+  -- Catppuccin (excellent dark and light variants)
   {
     "catppuccin/nvim",
     name = "catppuccin",
     lazy = false,
     priority = 1000,
+    opts = {
+      flavour = "mocha", -- default dark variant
+      background = {
+        light = "latte",
+        dark = "mocha",
+      },
+    },
   },
   
-  -- Gruvbox
+  -- One Dark Pro (classic dark theme)
   {
-    "ellisonleao/gruvbox.nvim",
+    "olimorris/onedarkpro.nvim",
     lazy = false,
     priority = 1000,
   },
   
-  -- One Dark
+  -- GitHub Theme (excellent light theme)
   {
-    "navarasu/onedark.nvim",
+    "projekt0n/github-nvim-theme",
     lazy = false,
     priority = 1000,
-  },
-  
-  -- Nightfox
-  {
-    "EdenEast/nightfox.nvim",
-    lazy = false,
-    priority = 1000,
+    config = function()
+      require('github-theme').setup({})
+    end,
   },
 }

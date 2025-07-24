@@ -11,7 +11,7 @@ vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "Buffer
 vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Recent files" })
 
 -- Colorscheme
-vim.keymap.set("n", "<leader>tl", ":set background=light<CR>", { desc = "Light theme" })
-vim.keymap.set("n", "<leader>td", ":set background=dark<CR>", { desc = "Dark theme" })
-vim.keymap.set("n", "<leader>tc", colorscheme_utils.cycle_colorscheme, { desc = "Cycle colorscheme" })
+vim.keymap.set("n", "<leader>tc", colorscheme_utils.cycle_colorscheme, { desc = "Cycle all colorschemes" })
+vim.keymap.set("n", "<leader>td", colorscheme_utils.cycle_dark_colorscheme, { desc = "Cycle dark themes" })
+vim.keymap.set("n", "<leader>tl", colorscheme_utils.cycle_light_colorscheme, { desc = "Cycle light themes" })
 vim.keymap.set("n", "<leader>ts", "<cmd>Telescope colorscheme<CR>", { desc = "Select colorscheme" })

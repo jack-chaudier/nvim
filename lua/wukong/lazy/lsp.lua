@@ -17,6 +17,7 @@ return {
                     "ts_ls",
                     "rust_analyzer",
                     "clangd",
+                    "zls"
                 },
                 automatic_enable = true, -- This is the new feature in v2.0.0
             })
